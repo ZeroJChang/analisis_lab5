@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Chat</title>
+</head>
+<body>
+  <div class="container">
+    <div class="row mt-5">
+      <div class="col-md-6 offset-md-3">
+        <h3 class="text-center">Chat</h3>
+		<h1 id="message"></h1>
+        <div id="chat-container" class="border rounded p-3" style="height: 300px; overflow-y: scroll;"></div>
+        <div class="input-group mt-3">
+          <input id="message-input" type="text" class="form-control" placeholder="Escribe tu mensaje..." />
+          <div class="input-group-append">
+            <button id="send-btn" onclick("getHolaMundo()") class="btn btn-primary">Enviar</button>
+			
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-6 offset-md-3">
+        <button id="connection-error-btn" class="btn btn-danger">Error de conexión</button>
+        <button id="send-error-btn" class="btn btn-warning">No se ha podido enviar el mensaje</button>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de error de conexión -->
+  <div class="modal fade" id="connection-error-modal" tabindex="-1" role="dialog" aria-labelledby="connection-error-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="connection-error-modal-label">Error de conexión</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Ha ocurrido un error de conexión. Por favor, intenta nuevamente más tarde.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de error de envío de mensaje -->
+  <div class="modal fade" id="send-error-modal" tabindex="-1" role="dialog" aria-labelledby="send-error-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="send-error-modal-label">No se ha podido enviar el mensaje</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          No se ha podido enviar el mensaje. Por favor, verifica tu conexión e inténtalo nuevamente.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("send-btn").addEventListener("click", function() {
+	alert("¡Hola Mundo!");
+      var message = document.getElementById("message-input").value;
+      document.getElementById("message-input").value = "";
+
+      if (message.trim() === "") {
+        $('#send-error-modal').modal('show');
+        return;
+      }
+
+      // Simulación de envío exitoso
+      setTimeout(function() {
+        document.getElementById("chat-container").innerHTML += "<p class='my-1'><strong>Usuario:</strong> " + message + "</p>";
+      }, 500);
+    });
+
+    document.getElementById("connection-error-btn").addEventListener("click", function() {
+      $('#connection-error-modal').modal('show');
+    });
+
+    document.getElementById("send-error-btn").addEventListener("click", function() {
+      $('#send-error-modal').modal('show');
+    });
+	
+	document.getElementById("hello-btn").addEventListener("click", function() {
+      
+    });
+	
+	const apiUrl = 'http://localhost:8080/IMSCK/Message';
+
+	function enviarMensaje(mensaje, usuario) {
+	  const data = {
+		mensaje: mensaje,
+		usuario: usuario
+	  };
+
+	  fetch(apiUrl, {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	  })
+	  .then(response => {
+		if (response.ok) {
+		  console.log('Mensaje enviado exitosamente');
+		} else {
+		  console.error('Error al enviar el mensaje');
+		}
+	  })
+	  .catch(error => {
+		console.error('Error de conexión', error);
+	  });
+	}
+
+  </script>
+  
+  
+
+
+  <script>
+    // Función para hacer la solicitud HTTP al API y mostrar la respuesta
+    function getHolaMundo() {
+      fetch('http://localhost:3000/api')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('message').textContent = data.message;
+        })
+        .catch(error => {
+          console.error('Error al obtener el mensaje: ', error);
+        });
+    }
+
+    // Llama a la función al cargar la página
+    window.onload = getHolaMundo;
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
